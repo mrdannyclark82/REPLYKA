@@ -29,3 +29,4 @@ openai-whisper
 faster-whisper
 librosa
 soundfile
+Flask
