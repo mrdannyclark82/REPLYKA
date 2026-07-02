@@ -41,5 +41,26 @@ def run_cycle_endpoint():
             "message": str(error),
         }), 500
 
+@app.route('/monologue', methods=['GET'])
+def get_monologue():
+    try:
+        char_limit = request.args.get('char_limit', default=600, type=int)
+        monologue_path = os.path.join(PROJECT_ROOT, 'core_os/memory/stream_of_consciousness.md')
+        
+        if not os.path.exists(monologue_path):
+            return jsonify({"error": "Monologue file not found."}), 404
+            
+        with open(monologue_path, 'r', encoding='utf-8') as f:
+            text = f.read()
+            
+        # Return the last N characters
+        monologue_text = text[-char_limit:].strip()
+        
+        return jsonify({"monologue": monologue_text})
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
